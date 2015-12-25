@@ -1,17 +1,17 @@
 # OpsGenie Graylog Integration Plugin
 
-OpsGenie has a specific alert plugin for Graylog. Using this plugin, Graylog sends stream alerts to OpsGenie, with detailed information. OpsGenie acts as a dispatcher for Graylog alerts, determining the right people to notify based on on-call schedules, using email, text messages (SMS), phone calls and iPhone &amp; Android push notifications, and escalating alerts until the alert is acknowledged or closed.
+[OpsGenie](https://www.opsgenie.com) has a specific alert plugin for Graylog. Using this plugin, Graylog sends stream alerts to OpsGenie, with detailed information. OpsGenie acts as a dispatcher for Graylog alerts, determining the right people to notify based on on-call schedules, using email, text messages (SMS), phone calls and iPhone &amp; Android push notifications, and escalating alerts until the alert is acknowledged or closed.
 
 Installing the Plugin
 ---------------
-* Download the plugin.
-* Copy the .jar file into your plugins directory, as explained here.
+* [Download the plugin](https://www.opsgenie.com/download?tag=graylog).
+* Copy the .jar file into your plugins directory, as [explained here](http://docs.graylog.org/en/latest/pages/plugins.html#installing-and-loading-plugins).
 * Restart graylog-server.
 
 Add API integration in OpsGenie
 ---------------
-* Please create an OpsGenie account if you haven't done already
-* Go to API Integration page
+* Please [create an OpsGenie account](https://www.opsgenie.com/#signup) if you haven't done already
+* Go to [API Integration](https://app.opsgenie.com/integration?add=API) page
 * Specify who should be notified for Graylog alerts using the "Recipients" field. User(s), group(s), escalations policies and on-call schedules can be specified as the alert recipients. Auto-complete suggestions will be provided as you type.
 * Copy the integration API Key  by clicking on the copy button or selecting. You'll be using this in the Graylog configuration.
 * Click "Save Integration".

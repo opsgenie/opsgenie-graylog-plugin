@@ -6,12 +6,12 @@
 
     <groupId>com.opsgenie.plugin.graylog</groupId>
     <artifactId>opsgenie-alarmcallback</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
     <description>Graylog ${project.artifactId} plugin.</description>
-    <url>https://www.graylog.org</url>
+    <url>https://www.opsgenie.com</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

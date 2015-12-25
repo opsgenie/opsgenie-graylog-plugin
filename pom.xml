@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.opsgenie.plugin.graylog</groupId>
-    <artifactId>opsgenie-alarmcallback</artifactId>
+    <artifactId>opsgenie-graylog-alarmcallback</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 

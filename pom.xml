@@ -42,15 +42,6 @@
         </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>opsgenie-repo</id>
-            <name>OpsGenie Maven Repository</name>
-            <url>http://repo.opsgenie.com/content/groups/public</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
-
     <build>
         <plugins>
             <plugin>

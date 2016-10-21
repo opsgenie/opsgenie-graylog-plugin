@@ -14,20 +14,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OpsGenieGraylogClient {
+class OpsGenieGraylogClient {
     private String apiKey;
     private String tags;
     private String recipients;
     private String teams;
 
-    public OpsGenieGraylogClient(String apiKey, String tags, String recipients, String teams) {
+    OpsGenieGraylogClient(String apiKey, String tags, String recipients, String teams) {
         this.apiKey = apiKey;
         this.tags = tags;
         this.recipients = recipients;
         this.teams = teams;
     }
 
-    public void trigger(Stream stream, AlertCondition.CheckResult checkResult) throws AlarmCallbackException {
+    void trigger(Stream stream, AlertCondition.CheckResult checkResult) throws AlarmCallbackException {
         OpsGenieClient client = new OpsGenieClient();
         CreateAlertRequest alertRequest = createAlertRequest(stream, checkResult);
         try {
@@ -56,10 +56,16 @@ public class OpsGenieGraylogClient {
         if (checkResult.getMatchingMessages().size() > 0) {
             stringBuilder.append("\nMatching messages: \n");
             for (MessageSummary summary : checkResult.getMatchingMessages()) {
-                stringBuilder.append(summary.getMessage()).append("\n");
+
+                stringBuilder.append("Message: ").append(summary.getMessage()).append("\n")
+                        .append("Source: ").append(summary.getSource()).append("\n")
+                        .append("Stream Ids: ").append(summary.getStreamIds()).append("\n")
+                        .append("Fields: ").append(summary.getFields()).append("\n\n")
+                        .append("------------------").append("\n")
+                ;
+
             }
         }
-
         request.setDescription(stringBuilder.toString().trim());
 
         Map<String, String> details = new HashMap<>();

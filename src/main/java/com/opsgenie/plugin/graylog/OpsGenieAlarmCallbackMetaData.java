@@ -11,12 +11,12 @@ import java.util.Set;
 public class OpsGenieAlarmCallbackMetaData implements PluginMetaData {
     @Override
     public String getUniqueId() {
-        return "com.opsgenie.plugin.graylog.OpsGenieAlarmCallbackPlugin";
+        return OpsGenieAlarmCallback.class.getCanonicalName();
     }
 
     @Override
     public String getName() {
-        return "OpsGenieAlarmCallback";
+        return "OpsGenie Alarm Callback";
     }
 
     @Override
@@ -31,17 +31,17 @@ public class OpsGenieAlarmCallbackMetaData implements PluginMetaData {
 
     @Override
     public Version getVersion() {
-        return new Version(1, 0, 0);
+        return new Version(1, 2, 0, "SNAPSHOT");
     }
 
     @Override
     public String getDescription() {
-        return "Graylog Opsgenie Integration plugin";
+        return "Graylog OpsGenie Integration plugin";
     }
 
     @Override
     public Version getRequiredVersion() {
-        return new Version(1, 0, 0);
+        return new Version(2, 0, 0);
     }
 
     @Override

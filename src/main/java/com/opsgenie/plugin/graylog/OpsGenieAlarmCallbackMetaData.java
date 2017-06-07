@@ -31,7 +31,7 @@ public class OpsGenieAlarmCallbackMetaData implements PluginMetaData {
 
     @Override
     public Version getVersion() {
-        return new Version(1, 2, 0, "SNAPSHOT");
+        return new Version(1, 2, 1, "SNAPSHOT");
     }
 
     @Override

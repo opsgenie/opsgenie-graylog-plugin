@@ -1,6 +1,7 @@
 package com.opsgenie.plugin.graylog;
 
 import com.google.common.collect.Maps;
+
 import org.graylog2.plugin.alarms.AlertCondition;
 import org.graylog2.plugin.alarms.callbacks.AlarmCallback;
 import org.graylog2.plugin.alarms.callbacks.AlarmCallbackConfigurationException;
@@ -9,9 +10,11 @@ import org.graylog2.plugin.configuration.Configuration;
 import org.graylog2.plugin.configuration.ConfigurationException;
 import org.graylog2.plugin.configuration.ConfigurationRequest;
 import org.graylog2.plugin.configuration.fields.ConfigurationField;
+import org.graylog2.plugin.configuration.fields.DropdownField;
 import org.graylog2.plugin.configuration.fields.TextField;
 import org.graylog2.plugin.streams.Stream;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -19,7 +22,7 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
     private static final String API_KEY = "api_key";
     private static final String TEAMS = "teams";
     private static final String TAGS = "tags";
-    private static final String RECIPIENTS = "recipients";
+    private static final String PRIORITY = "priority";
 
 
     private Configuration configuration;
@@ -32,7 +35,7 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
     @Override
     public void call(Stream stream, AlertCondition.CheckResult checkResult) throws AlarmCallbackException {
         call(new OpsGenieGraylogClient(configuration.getString(API_KEY), configuration.getString(TAGS),
-                configuration.getString(RECIPIENTS), configuration.getString(TEAMS)), stream, checkResult);
+                configuration.getString(TEAMS), configuration.getString(PRIORITY)), stream, checkResult);
     }
 
     private void call(OpsGenieGraylogClient opsGenieGraylogClient, Stream stream, AlertCondition.CheckResult checkResult) throws AlarmCallbackException {
@@ -56,14 +59,20 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
 
         configurationRequest.addField(new TextField(TEAMS,
                 "Teams", "",
-                "Comma separated list of teams",
+                "Comma separated list of team names",
                 ConfigurationField.Optional.OPTIONAL));
 
-        configurationRequest.addField(new TextField(RECIPIENTS,
-                "Recipients", "",
-                "Comma separated list of recipients",
+        HashMap<String, String> priorities = new HashMap<>();
+        priorities.put("P1", "P1-Critical");
+        priorities.put("P2", "P2-High");
+        priorities.put("P3", "P3-Moderate");
+        priorities.put("P4", "P4-Low");
+        priorities.put("P5", "P5-Informational");
+        configurationRequest.addField(new DropdownField(PRIORITY,
+                "Priority",
+                "P3", priorities,
+                "Priority level of the alert. Default is P3-Moderate",
                 ConfigurationField.Optional.OPTIONAL));
-
 
         return configurationRequest;
     }

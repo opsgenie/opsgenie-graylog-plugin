@@ -6,6 +6,7 @@ import org.graylog2.plugin.PluginModule;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 public class OpsGenieAlarmCallbackPlugin implements Plugin {
     @Override
@@ -15,6 +16,6 @@ public class OpsGenieAlarmCallbackPlugin implements Plugin {
 
     @Override
     public Collection<PluginModule> modules() {
-        return Arrays.<PluginModule>asList(new OpsGenieAlarmCallbackModule());
+        return Collections.<PluginModule>singletonList(new OpsGenieAlarmCallbackModule());
     }
 }

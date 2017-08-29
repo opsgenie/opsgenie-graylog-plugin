@@ -4,7 +4,7 @@
 
 Installing the Plugin
 ---------------
-* [Download the plugin](https://www.opsgenie.com/download?tag=graylog).
+* [Download the plugin](https://app.opsgenie.com/download?tag=graylog).
 * Copy the .jar file into your plugins directory, as [explained here](http://docs.graylog.org/en/latest/pages/plugins.html#installing-and-loading-plugins).
 * Restart graylog-server.
 

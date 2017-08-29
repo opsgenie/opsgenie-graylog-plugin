@@ -12,7 +12,7 @@ Add API integration in OpsGenie
 ---------------
 * Please [create an OpsGenie account](https://www.opsgenie.com/#signup) if you haven't done already
 * Go to [Graylog Integration](https://app.opsgenie.com/integration?add=Graylog) page
-* Specify who should be notified for Graylog alerts using the "Recipients" field. User(s), group(s), escalations policies and on-call schedules can be specified as the alert recipients. Auto-complete suggestions will be provided as you type.
+* Specify the teams should be notified for Graylog alerts using the "Teams" field. Auto-complete suggestions will be provided as you type.
 * Copy the integration API Key  by clicking on the copy button or selecting. You'll be using this in the Graylog configuration.
 * Click "Save Integration".
 
@@ -20,7 +20,7 @@ Configuration on Graylog
 ---------------
 * In Graylog, Go to Streams page and click "Manage alerts" on the stream you want to configure alerts.
 * Under Callbacks, select **OpsGenie alarm callback** and click "Add callback".
-* Paste the API key you copied into "OpsGenie API Key" field. You can optionally specify Recipients, Teams and Tags here also.
+* Paste the API key you copied into "OpsGenie API Key" field. You can optionally specify Teams and Tags here also.
 * Click Save.
 
 Building the Plugin

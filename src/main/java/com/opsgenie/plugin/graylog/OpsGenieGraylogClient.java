@@ -94,6 +94,7 @@ class OpsGenieGraylogClient {
         connection.setDoOutput(true);
         connection.setRequestProperty("Authorization", "GenieKey " + apiKey);
         connection.setRequestProperty("User-Agent", "opsgenie-graylog-plugin/" + new OpsGenieAlarmCallbackMetaData().getVersion().toString());
+        connection.setRequestProperty("Accept", "application/json");
         try {
             connection.setRequestMethod("POST");
         } catch (ProtocolException e) {

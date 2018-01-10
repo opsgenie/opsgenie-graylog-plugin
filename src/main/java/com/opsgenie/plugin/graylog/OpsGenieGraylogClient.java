@@ -119,7 +119,7 @@ class OpsGenieGraylogClient {
         }
         request.setTeams(teams);
 
-        request.setMessage(String.format("[Graylog] Stream: %s: %s", stream.getTitle(), checkResult.getResultDescription()));
+        request.setMessage(String.format("[Graylog] %s", checkResult.getTriggeredCondition().getTitle()));
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(checkResult.getResultDescription()).append("\n")

@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class OpsGenieAlarmCallback implements AlarmCallback {
     private static final String API_KEY = "api_key";
+    private static final String API_URL = "api_url";
     private static final String TEAMS = "teams";
     private static final String TAGS = "tags";
     private static final String PRIORITY = "priority";
@@ -34,7 +35,7 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
 
     @Override
     public void call(Stream stream, AlertCondition.CheckResult checkResult) throws AlarmCallbackException {
-        call(new OpsGenieGraylogClient(configuration.getString(API_KEY), configuration.getString(TAGS),
+        call(new OpsGenieGraylogClient(configuration.getString(API_URL), configuration.getString(API_KEY), configuration.getString(TAGS),
                 configuration.getString(TEAMS), configuration.getString(PRIORITY)), stream, checkResult);
     }
 
@@ -46,6 +47,11 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
     @Override
     public ConfigurationRequest getRequestedConfiguration() {
         final ConfigurationRequest configurationRequest = new ConfigurationRequest();
+
+        configurationRequest.addField(new TextField(API_URL,
+                "OpsGenie API url", "",
+                "OpsGenie API integration url",
+                ConfigurationField.Optional.NOT_OPTIONAL));
 
         configurationRequest.addField(new TextField(API_KEY,
                 "OpsGenie API key", "",

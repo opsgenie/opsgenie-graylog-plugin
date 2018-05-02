@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opsgenie.plugin.graylog.alertapi.CreateAlertRequest;
 import com.opsgenie.plugin.graylog.alertapi.CreateAlertResponse;
-
+import org.apache.commons.lang.StringUtils;
 import org.graylog2.plugin.MessageSummary;
 import org.graylog2.plugin.alarms.AlertCondition;
 import org.graylog2.plugin.alarms.callbacks.AlarmCallbackException;
@@ -16,8 +16,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,7 @@ import java.util.Scanner;
 class OpsGenieGraylogClient {
 
     private static final String ALERT_API_URL = "https://api.opsgenie.com/v2/alerts";
+    private final String proxyURL;
 
     private final Logger logger = LoggerFactory.getLogger(OpsGenieGraylogClient.class);
 
@@ -38,11 +41,12 @@ class OpsGenieGraylogClient {
     private String priority;
     private ObjectMapper objectMapper;
 
-    OpsGenieGraylogClient(String apiKey, String tags, String teams, String priority) {
+    OpsGenieGraylogClient(String apiKey, String tags, String teams, String priority, String proxyURL) {
         this.apiKey = apiKey;
         this.tags = tags;
         this.teams = teams;
         this.priority = priority;
+        this.proxyURL = proxyURL;
 
         this.objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -85,7 +89,14 @@ class OpsGenieGraylogClient {
         final HttpURLConnection connection;
 
         try {
-            connection = (HttpURLConnection) url.openConnection();
+            if (StringUtils.isEmpty(proxyURL)) {
+                connection = (HttpURLConnection) url.openConnection();
+            } else {
+                String[] url_port = proxyURL.split(":");
+                InetSocketAddress socketAddress = new InetSocketAddress(url_port[0], Integer.valueOf(url_port[1]));
+                Proxy proxy = new Proxy(Proxy.Type.HTTP, socketAddress);
+                connection = (HttpURLConnection) url.openConnection(proxy);
+            }
         } catch (IOException e) {
             logger.error("Error while opening connection to OpsGenie Alert API.", e);
             throw new AlarmCallbackException("Error while opening connection to OpsGenie Alert API.", e);

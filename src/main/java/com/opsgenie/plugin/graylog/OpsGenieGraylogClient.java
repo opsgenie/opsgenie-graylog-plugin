@@ -28,8 +28,6 @@ import java.util.Scanner;
 
 class OpsGenieGraylogClient {
 
-    private static final String ALERT_API_URL = "https://api.opsgenie.com/v2/alerts";
-
     private final Logger logger = LoggerFactory.getLogger(OpsGenieGraylogClient.class);
 
     private String apiKey;
@@ -37,12 +35,14 @@ class OpsGenieGraylogClient {
     private String teams;
     private String priority;
     private ObjectMapper objectMapper;
+    private String apiUrl;
 
-    OpsGenieGraylogClient(String apiKey, String tags, String teams, String priority) {
+    OpsGenieGraylogClient(String apiKey, String tags, String teams, String priority, String apiUrl) {
         this.apiKey = apiKey;
         this.tags = tags;
         this.teams = teams;
         this.priority = priority;
+        this.apiUrl = apiUrl;
 
         this.objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -73,7 +73,7 @@ class OpsGenieGraylogClient {
         final URL url;
 
         try {
-            url = new URL(ALERT_API_URL);
+            url = new URL(apiUrl);
         } catch (MalformedURLException e) {
             logger.error("Malformed URL for OpsGenie Alert API", e);
             throw new AlarmCallbackException("Malformed URL for OpsGenie Alert API", e);

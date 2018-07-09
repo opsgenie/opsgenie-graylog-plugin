@@ -6,6 +6,7 @@ Installing the Plugin
 ---------------
 * [Download the plugin](https://app.opsgenie.com/download?tag=graylog).
 * Copy the .jar file into your plugins directory, as [explained here](http://docs.graylog.org/en/latest/pages/plugins.html#installing-and-loading-plugins).
+* You should give read permission to the .jar file. 
 * Restart graylog-server.
 
 Add API integration in OpsGenie
@@ -18,9 +19,11 @@ Add API integration in OpsGenie
 
 Configuration on Graylog
 ---------------
-* In Graylog, Go to Streams page and click "Manage alerts" on the stream you want to configure alerts.
-* Under Callbacks, select **OpsGenie alarm callback** and click "Add callback".
-* Paste the API key you copied into "OpsGenie API Key" field. You can optionally specify Teams and Tags here also.
+* In Graylog, Go to Alert page and click "Manage notifications".
+* Click "Add new notification".
+* Select your desired stream.
+* Under notification type, select **OpsGenie alarm callback** and click "Add notification".
+* Paste the API key you copied into "OpsGenie API Key" field. And paste the API URL into the "OpsGenie API URL" field. You can optionally specify Teams and Tags here also.
 * Click Save.
 
 Building the Plugin

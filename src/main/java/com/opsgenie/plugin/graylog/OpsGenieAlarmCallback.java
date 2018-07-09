@@ -23,7 +23,7 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
     private static final String TEAMS = "teams";
     private static final String TAGS = "tags";
     private static final String PRIORITY = "priority";
-
+    private static final String API_URL = "api_url";
 
     private Configuration configuration;
 
@@ -35,7 +35,7 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
     @Override
     public void call(Stream stream, AlertCondition.CheckResult checkResult) throws AlarmCallbackException {
         call(new OpsGenieGraylogClient(configuration.getString(API_KEY), configuration.getString(TAGS),
-                configuration.getString(TEAMS), configuration.getString(PRIORITY)), stream, checkResult);
+                configuration.getString(TEAMS), configuration.getString(PRIORITY), configuration.getString(API_URL)), stream, checkResult);
     }
 
     private void call(OpsGenieGraylogClient opsGenieGraylogClient, Stream stream, AlertCondition.CheckResult checkResult) throws AlarmCallbackException {
@@ -61,6 +61,11 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
                 "Teams", "",
                 "Comma separated list of team names",
                 ConfigurationField.Optional.OPTIONAL));
+
+        configurationRequest.addField(new TextField(API_URL,
+                "OpsGenie API URL", "",
+                "OpsGenie API integration URL",
+                ConfigurationField.Optional.NOT_OPTIONAL));
 
         HashMap<String, String> priorities = new HashMap<>();
         priorities.put("P1", "P1-Critical");

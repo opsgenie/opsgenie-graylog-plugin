@@ -15,18 +15,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.Proxy;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.net.*;
+import java.util.*;
 
 class OpsGenieGraylogClient {
     private final Logger logger = LoggerFactory.getLogger(OpsGenieGraylogClient.class);
@@ -91,8 +81,8 @@ class OpsGenieGraylogClient {
             if (StringUtils.isEmpty(proxyURL)) {
                 connection = (HttpURLConnection) url.openConnection();
             } else {
-                String[] url_port = proxyURL.split(":");
-                InetSocketAddress socketAddress = new InetSocketAddress(url_port[0], Integer.valueOf(url_port[1]));
+                String[] urlPort = proxyURL.split(":");
+                InetSocketAddress socketAddress = new InetSocketAddress(urlPort[0], Integer.valueOf(urlPort[1]));
                 Proxy proxy = new Proxy(Proxy.Type.HTTP, socketAddress);
                 connection = (HttpURLConnection) url.openConnection(proxy);
             }

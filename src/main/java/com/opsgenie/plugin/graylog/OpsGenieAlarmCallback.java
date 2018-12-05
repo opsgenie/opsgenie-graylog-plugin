@@ -15,8 +15,11 @@ import org.graylog2.plugin.configuration.fields.TextField;
 import org.graylog2.plugin.streams.Stream;
 
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class OpsGenieAlarmCallback implements AlarmCallback {
@@ -54,6 +57,12 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
                 "OpsGenie API integration key",
                 ConfigurationField.Optional.NOT_OPTIONAL));
 
+        configurationRequest.addField(new TextField(PROXY,
+                "Proxy",
+                null,
+                "Please insert the proxy information in the following format: <ProxyAddress>:<Port>",
+                ConfigurationField.Optional.OPTIONAL));
+
         configurationRequest.addField(new TextField(TAGS,
                 "Tags", "",
                 "Comma separated list of alert tags",
@@ -68,12 +77,6 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
                 "OpsGenie API URL", "",
                 "OpsGenie API integration URL",
                 ConfigurationField.Optional.NOT_OPTIONAL));
-
-        configurationRequest.addField(new TextField(PROXY,
-                "Proxy",
-                null,
-                "Please insert the proxy information in the following format: <ProxyAddress>:<Port>",
-                ConfigurationField.Optional.OPTIONAL));
 
         HashMap<String, String> priorities = new HashMap<>();
         priorities.put("P1", "P1-Critical");
@@ -97,15 +100,19 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
 
     @Override
     public Map<String, Object> getAttributes() {
-        return Maps.transformEntries(configuration.getSource(), new Maps.EntryTransformer<String, Object, Object>() {
-            @Override
-            public Object transformEntry(String key, Object value) {
+        Map<String, Object> source = configuration.getSource();
+
+        if (source != null) {
+            return Maps.transformEntries(source, (key, value) -> {
                 if (API_KEY.equals(key)) {
                     return "****";
                 }
+
                 return value;
-            }
-        });
+            });
+        }
+
+        return new HashMap<>();
     }
 
     @Override
@@ -115,21 +122,43 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
         }
 
         if (configuration.stringIsSet(PROXY)) {
-            try {
-                String url_str = configuration.getString(PROXY);
-                if (StringUtils.startsWith(url_str, "http")) {
-                    throw new ConfigurationException("Couldn't parse " + PROXY + ", please remove scheme (http/https)");
+            String urlString = configuration.getString(PROXY);
+
+            if (StringUtils.startsWith(urlString, "http")) {
+                throw new ConfigurationException("Couldn't parse " + PROXY + ", please remove scheme (http/https)");
+            }
+
+            if (StringUtils.countMatches(urlString, ":") != 1) {
+                throw new ConfigurationException("Couldn't parse " + PROXY + ", please make sure ':' appears only once");
+            }
+
+            String[] urlPortPair = StringUtils.split(urlString, ":");
+
+            if (urlPortPair != null) {
+                if (urlPortPair.length < 2) {
+                    throw new ConfigurationException("Couldn't parse " + PROXY + ", please review the proxy information");
+                } else {
+                    List<String> urlPortPairList = Arrays.stream(urlPortPair).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+
+                    if (urlPortPairList.size() == 2) {
+                        String portString = urlPortPair[1];
+                        int port;
+
+                        try {
+                            port = Integer.parseInt(portString);
+                        } catch (NumberFormatException e) {
+                            throw new ConfigurationException("Could not parse " + PROXY + ", please make sure port is a number");
+                        }
+
+                        InetSocketAddress sockAddress = new InetSocketAddress(urlPortPair[0], port);
+
+                        if (sockAddress.isUnresolved()) {
+                            throw new ConfigurationException("Couldn't resolve " + PROXY);
+                        }
+                    } else {
+                        throw new ConfigurationException("Couldn't parse " + PROXY + ", please review the proxy information");
+                    }
                 }
-                if (StringUtils.countMatches(url_str, ":") != 1) {
-                    throw new ConfigurationException("Couldn't parse " + PROXY + ", please make sure ':' appears only once");
-                }
-                String[] url_port = url_str.split(":");
-                InetSocketAddress sockAddress = new InetSocketAddress(url_port[0], Integer.valueOf(url_port[1]));
-                if (sockAddress.isUnresolved()) {
-                    throw new ConfigurationException("Couldn't resolve " + PROXY);
-                }
-            } catch (Exception ignored) {
-                throw new ConfigurationException("Couldn't parse " + PROXY);
             }
         }
     }

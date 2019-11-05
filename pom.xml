@@ -6,7 +6,7 @@
 
     <groupId>com.opsgenie.plugin.graylog</groupId>
     <artifactId>opsgenie-graylog-alarmcallback</artifactId>
-    <version>1.3.5-RELEASE</version>
+    <version>1.3.6-RELEASE</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>

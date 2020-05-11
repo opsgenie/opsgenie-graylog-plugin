@@ -29,6 +29,7 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
     private static final String PRIORITY = "priority";
     private static final String PROXY = "proxy_address";
     private static final String API_URL = "api_url";
+    private static final String SHOW_FIELDS = "show_fields";
 
     private Configuration configuration;
 
@@ -40,7 +41,7 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
     @Override
     public void call(Stream stream, AlertCondition.CheckResult checkResult) throws AlarmCallbackException {
         call(new OpsGenieGraylogClient(configuration.getString(API_KEY), configuration.getString(TAGS),
-                configuration.getString(TEAMS), configuration.getString(PRIORITY), configuration.getString(API_URL), configuration.getString(PROXY)), stream, checkResult);
+                configuration.getString(TEAMS), configuration.getString(PRIORITY), configuration.getString(API_URL), configuration.getString(SHOW_FIELDS), configuration.getString(PROXY)), stream, checkResult);
     }
 
     private void call(OpsGenieGraylogClient opsGenieGraylogClient, Stream stream, AlertCondition.CheckResult checkResult) throws AlarmCallbackException {
@@ -77,6 +78,12 @@ public class OpsGenieAlarmCallback implements AlarmCallback {
                 "OpsGenie API URL", "",
                 "OpsGenie API integration URL",
                 ConfigurationField.Optional.NOT_OPTIONAL));
+
+        configurationRequest.addField(new TextField(SHOW_FIELDS,
+                "Show fields", "",
+                "Comma separated list of displayed fields, default show all",
+                ConfigurationField.Optional.OPTIONAL));
+
 
         HashMap<String, String> priorities = new HashMap<>();
         priorities.put("P1", "P1-Critical");

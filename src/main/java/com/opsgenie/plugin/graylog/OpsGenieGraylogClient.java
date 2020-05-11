@@ -28,14 +28,16 @@ class OpsGenieGraylogClient {
     private ObjectMapper objectMapper;
     private String apiUrl;
     private final String proxyURL;
+    private String showFields;
 
-    OpsGenieGraylogClient(String apiKey, String tags, String teams, String priority, String apiUrl, String proxyURL) {
+    OpsGenieGraylogClient(String apiKey, String tags, String teams, String priority, String apiUrl, String showFields, String proxyURL) {
         this.apiKey = apiKey;
         this.tags = tags;
         this.teams = teams;
         this.priority = priority;
         this.apiUrl = apiUrl;
         this.proxyURL = proxyURL;
+        this.showFields = showFields;
 
         this.objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -129,14 +131,25 @@ class OpsGenieGraylogClient {
         if (checkResult.getMatchingMessages().size() > 0) {
             stringBuilder.append("\nMatching messages: \n");
             for (MessageSummary summary : checkResult.getMatchingMessages()) {
-
                 stringBuilder.append("Message: ").append(summary.getMessage()).append("\n")
                         .append("Source: ").append(summary.getSource()).append("\n")
                         .append("Stream Ids: ").append(summary.getStreamIds()).append("\n")
-                        .append("Fields: ").append(summary.getFields()).append("\n\n")
-                        .append("------------------").append("\n")
+                        .append("Fields: \n")
                 ;
-
+                if(showFields != null && !showFields.trim().isEmpty()){
+                    summary.getFields().keySet()
+                        .iterator()
+                        .forEachRemaining(
+                            fieldKey -> {
+                                if(Arrays.asList(showFields.split(",")).contains(fieldKey)){
+                                    stringBuilder.append(fieldKey + " = " + summary.getFields().get(fieldKey)).append("\n");
+                                }
+                            }
+                    );
+                }else{
+                    stringBuilder.append(summary.getFields());
+                }
+                stringBuilder.append("\n\n").append("------------------").append("\n");
             }
         }
         request.setDescription(stringBuilder.toString().trim());
